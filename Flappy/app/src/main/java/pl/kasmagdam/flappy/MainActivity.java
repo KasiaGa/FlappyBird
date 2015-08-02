@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import pl.kasmagdam.pl.kasmagdam.framework.implementation.AndroidGame;
+
 
 public class MainActivity extends Activity {
 
@@ -16,7 +18,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Button newGameButton = (Button) findViewById(R.id.new_game_button);
-        final Intent intent = new Intent(this, GameActivity.class);
+        final Intent intent = new Intent(this, AndroidGame.class);
         newGameButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(intent);
@@ -24,7 +26,7 @@ public class MainActivity extends Activity {
         });
 
         final Button instructionsButton = (Button) findViewById(R.id.instructions_button);
-        final Intent intent2 = new Intent(this, InstructionsActivity.class);
+        final Intent intent2 = new Intent(this, AndroidGame.class);
         instructionsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(intent2);
@@ -63,7 +65,7 @@ public class MainActivity extends Activity {
     }
 
     /*public void startGame(Intent intent) {
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, AndroidGame.class);
         startActivity(intent);
 
     }*/
