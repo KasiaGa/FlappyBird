@@ -26,6 +26,7 @@ public class GameScreen extends Screen {
 
     int livesLeft = 1;
     Paint paint;
+    Flappy flappy;
 
     public GameScreen(Game game) {
         super(game);
@@ -34,11 +35,12 @@ public class GameScreen extends Screen {
 
         // Defining a paint object
         paint = new Paint();
-        paint.setTextSize(30);
+        paint.setTextSize(35);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
 
+        flappy = new Flappy();
     }
 
     @Override
@@ -83,25 +85,27 @@ public class GameScreen extends Screen {
 
             if (event.type == TouchEvent.TOUCH_DOWN) {
 
-                if (event.x < 640) {
+                flappy.setJumped(true);
+               /* if (event.x < 640) {
                     // Move left.
                 }
 
                 else if (event.x > 640) {
                     // Move right.
-                }
+                }*/
 
             }
 
             if (event.type == TouchEvent.TOUCH_UP) {
 
-                if (event.x < 640) {
+                flappy.setJumped(false);
+                /*if (event.x < 640) {
                     // Stop moving left.
                 }
 
                 else if (event.x > 640) {
                     // Stop moving right. }
-                }
+                }*/
             }
 
 
@@ -117,6 +121,7 @@ public class GameScreen extends Screen {
         // 3. Call individual update() methods here.
         // This is where all the game updates happen.
         // For example, robot.update();
+        flappy.update();
     }
 
     private void updatePaused(List<TouchEvent> touchEvents) {
@@ -124,7 +129,7 @@ public class GameScreen extends Screen {
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
-
+                state = GameState.Running;
             }
         }
     }
@@ -180,22 +185,26 @@ public class GameScreen extends Screen {
     private void drawReadyUI() {
         Graphics g = game.getGraphics();
 
+        g.drawImage(Assets.background, 0, 0);
+        g.drawImage(Assets.character, flappy.getCenterX()-108, flappy.getCenterY()-56);
         g.drawARGB(155, 0, 0, 0);
-        g.drawString("Tap each side of the screen to move in that direction.",
-                640, 300, paint);
+        g.drawString("Tap screen to start.",
+                384, 300, paint);
 
     }
 
     private void drawRunningUI() {
         Graphics g = game.getGraphics();
-
+        g.drawImage(Assets.background, 0, 0);
+        g.drawImage(Assets.character, flappy.getCenterX()-108, flappy.getCenterY()-56);
     }
 
     private void drawPausedUI() {
         Graphics g = game.getGraphics();
         // Darken the entire screen so you can display the Paused screen.
+        g.drawImage(Assets.background, 0, 0);
         g.drawARGB(155, 0, 0, 0);
-
+        g.drawImage(Assets.paused, 196, 200);
     }
 
     private void drawGameOverUI() {

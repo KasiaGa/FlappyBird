@@ -17,21 +17,23 @@ public class LoadingScreen extends Screen {
     @Override
     public void update(float deltaTime) {
         Graphics g = game.getGraphics();
-        Assets.menu = g.newImage("menu.jpg", Graphics.ImageFormat.RGB565);
-        Assets.click = game.getAudio().createSound("explode.ogg");
+        Assets.menu = g.newImage("menu.png", Graphics.ImageFormat.RGB565);
+        Assets.background = g.newImage("background.png", Graphics.ImageFormat.RGB565);
+        Assets.paused = g.newImage("paused.png", Graphics.ImageFormat.ARGB4444);
+        Assets.character = g.newImage("character.png", Graphics.ImageFormat.ARGB4444);
+        /*Assets.character = g.newImage("character.png", Graphics.ImageFormat.ARGB4444);*/
+        /*Assets.button = g.newImage("button.png", Graphics.ImageFormat.ARGB4444);*/
 
-
+//        Assets.click = game.getAudio().createSound("explode.ogg");
 
         game.setScreen(new MainMenuScreen(game));
-
-
     }
 
 
     @Override
     public void paint(float deltaTime) {
-
-
+        Graphics g = game.getGraphics();
+        g.drawImage(Assets.splash, 0, 0);
     }
 
 

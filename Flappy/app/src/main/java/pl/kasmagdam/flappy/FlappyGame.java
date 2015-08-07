@@ -8,8 +8,34 @@ import pl.kasmagdam.pl.kasmagdam.framework.implementation.AndroidGame;
  */
 public class FlappyGame extends AndroidGame {
 
+//    public static String map;
+    boolean firstTimeCreate = true;
+
     @Override
     public Screen getInitScreen() {
-        return new LoadingScreen(this);
+
+        if (firstTimeCreate) {
+            Assets.load(this);
+            firstTimeCreate = false;
+        }
+
+        return new SplashLoadingScreen(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        getCurrentScreen().backButton();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Assets.theme.play();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Assets.theme.pause();
     }
 }
