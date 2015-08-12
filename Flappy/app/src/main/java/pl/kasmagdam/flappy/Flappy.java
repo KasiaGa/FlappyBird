@@ -61,7 +61,7 @@ public class Flappy {
         centerY += speedDown;
         centerY -= speedUp;
 
-        rect.set(centerX - 108, centerY - 56, centerX + 108, centerY + 56);
+        rect.set(centerX - 108, centerY - 56, centerX + 90, centerY + 56);
 
     }
 

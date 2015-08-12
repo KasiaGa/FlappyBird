@@ -7,7 +7,7 @@ public class ScrollHandler {
 
     private static Ground ground1, ground2;
     private static Obstacle bar1, bar2;
-    public static final int SCROLL_SPEED = -5;
+    public static final int SCROLL_SPEED = -10;
     public static final int PIPE_GAP = 500;
 
     public ScrollHandler(int y) {
@@ -15,7 +15,7 @@ public class ScrollHandler {
         ground2 = new Ground(ground1.getTailX(), y, 141, 122, SCROLL_SPEED);
 
         bar1 = new Obstacle(768, 0, 114, 315, SCROLL_SPEED);
-        bar2 = new Obstacle(bar1.getTailX() + PIPE_GAP, 0, 114, 315, SCROLL_SPEED);
+        bar2 = new Obstacle(bar1.getTailX() + PIPE_GAP, 0, 114, 500, SCROLL_SPEED);
     }
 
     public void update() {

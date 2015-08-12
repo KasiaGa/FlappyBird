@@ -257,10 +257,14 @@ public class GameScreen extends Screen {
         g.drawImage(bg, 0, 0);
         /*g.drawImage(obstacle, obst.getCenterX() - 71, obst.getCenterY() - 157);
         g.drawImage(bar, obst.getCenterX(), obst.getCenterY());*/
+        g.drawImage(bar, bar1.getX(), bar1.getY(), 0, 0, bar1.getWidth(), bar1.getHeight());
+        g.drawImage(bar, bar1.getX(), bar1.getY() + bar1.getHeight() + 400, 0, 0,
+                bar1.getWidth(), 1112 - bar1.getHeight() - 350); /*bar1.getHeight() + 500);*/
+        g.drawImage(bar, bar2.getX(), bar2.getY(), 0, 0, bar2.getWidth(), bar2.getHeight());
+        g.drawImage(bar, bar2.getX(), bar2.getY() + bar2.getHeight() + 400, 0, 0,
+                bar2.getWidth(), 1112 - bar2.getHeight() - 350);
         g.drawImage(ground, ground1.getX(), ground1.getY());
         g.drawImage(ground, ground2.getX(), ground2.getY());
-        g.drawImage(bar, bar1.getX(), bar1.getY());
-        g.drawImage(bar, bar2.getX(), bar2.getY());
         g.drawImage(currentSprite, flappy.getCenterX() - 108, flappy.getCenterY() - 56);
         // Example:
         // g.drawImage(Assets.background, 0, 0);
