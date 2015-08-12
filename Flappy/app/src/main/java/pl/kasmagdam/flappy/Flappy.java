@@ -7,6 +7,8 @@ import android.graphics.Rect;
  */
 public class Flappy {
 
+    private int lives = GameScreen.getLivesLeft();
+
     final int UPSPEED = -15;
     final int DOWNSPEED = 5;
 
@@ -17,6 +19,9 @@ public class Flappy {
 
     private int speedUp = 0;
     private int speedDown = 5;
+
+    private float rotation;
+    private static boolean shouldntFlap = false;
 
     public static Rect rect = new Rect(0, 0, 0, 0);
 
@@ -35,7 +40,8 @@ public class Flappy {
         }
 
         if(centerY >1120) {
-            speedDown = 0;
+            lives = 0;
+            /*speedDown = 0;*/
         }
 
         if(centerY <=1120) {
@@ -45,6 +51,12 @@ public class Flappy {
         if(centerY<0) {
             speedUp=0;
         }
+
+        if(speedUp <=0) {
+            shouldntFlap = true;
+        }
+        else
+            shouldntFlap = false;
 
         centerY += speedDown;
         centerY -= speedUp;
@@ -91,6 +103,22 @@ public class Flappy {
 
     public void setSpeedDown(int speedDown) {
         this.speedDown = speedDown;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public static boolean isShouldntFlap() {
+        return shouldntFlap;
+    }
+
+    public static void setShouldntFlap(boolean shouldntFlap) {
+        Flappy.shouldntFlap = shouldntFlap;
     }
 
 }

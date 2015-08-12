@@ -7,6 +7,7 @@ import android.graphics.Paint;
 
 import pl.kasmagdam.framework.Game;
 import pl.kasmagdam.framework.Graphics;
+import pl.kasmagdam.framework.Image;
 import pl.kasmagdam.framework.Screen;
 import pl.kasmagdam.framework.Input.TouchEvent;
 
@@ -24,14 +25,55 @@ public class GameScreen extends Screen {
     // Variable Setup
     // You would create game objects here.
 
-    int livesLeft = 1;
-    Paint paint;
-    Flappy flappy;
+    static int livesLeft = 1;
+    Paint paint, paint2;
+    private static Flappy flappy;
+    private static Obstacle obst;
+    private Image currentSprite, character, character2, character3, character4,
+            character5, bg, obstacle, bar, ground;
+    private Animation anim, anim2;
+    private static boolean hitObstacle, hitGround;
+    private ScrollHandler scroller;
+    private static Obstacle bar1, bar2;
+    private static Ground ground1, ground2;
 
     public GameScreen(Game game) {
         super(game);
 
         // Initialize game objects here
+        bg = Assets.background;
+
+        flappy = new Flappy();
+        scroller = new ScrollHandler(1158);
+        bar1 = scroller.getBar1();
+        bar2 = scroller.getBar2();
+        ground1 = scroller.getGround1();
+        ground2 = scroller.getGround2();
+        /*obst = new Obstacle();*/
+
+        character = Assets.character;
+        character2 = Assets.character2;
+        character3 = Assets.character3;
+        character4 = Assets.character4;
+        character5 = Assets.character5;
+
+        obstacle = Assets.obstacle;
+        bar = Assets.bar;
+        ground = Assets.ground;
+
+        anim = new Animation();
+        anim.addFrame(character, 50);
+        anim.addFrame(character2, 50);
+        anim.addFrame(character3, 50);
+        anim.addFrame(character2, 50);
+
+        anim2 = new Animation();
+        anim2.addFrame(character, 200);
+        anim2.addFrame(character5, 50);
+
+        currentSprite = anim.getImage();
+        hitObstacle = false;
+        hitGround = false;
 
         // Defining a paint object
         paint = new Paint();
@@ -40,7 +82,13 @@ public class GameScreen extends Screen {
         paint.setAntiAlias(true);
         paint.setColor(Color.WHITE);
 
-        flappy = new Flappy();
+        paint2 = new Paint();
+        paint2.setTextSize(100);
+        paint2.setTextAlign(Paint.Align.CENTER);
+        paint2.setAntiAlias(true);
+        paint2.setColor(Color.WHITE);
+
+        state = GameState.Ready;
     }
 
     @Override
@@ -69,8 +117,22 @@ public class GameScreen extends Screen {
         // state now becomes GameState.Running.
         // Now the updateRunning() method will be called!
 
-        if (touchEvents.size() > 0)
-            state = GameState.Running;
+        int len = touchEvents.size();
+        for (int i = 0; i < len; i++) {
+            TouchEvent event = touchEvents.get(i);
+
+            if (event.type == TouchEvent.TOUCH_DOWN) {
+
+                if (inBounds(event, 0, 0, 768, 1280)) {
+                    state = GameState.Running;
+                }
+            }
+        }
+
+
+
+  /*      if (touchEvents.size() > 0)
+            state = GameState.Running;*/
     }
 
     private void updateRunning(List<TouchEvent> touchEvents, float deltaTime) {
@@ -86,30 +148,29 @@ public class GameScreen extends Screen {
             if (event.type == TouchEvent.TOUCH_DOWN) {
 
                 flappy.setJumped(true);
-               /* if (event.x < 640) {
-                    // Move left.
-                }
-
-                else if (event.x > 640) {
-                    // Move right.
-                }*/
-
+                currentSprite = anim.getImage();
             }
 
             if (event.type == TouchEvent.TOUCH_UP) {
 
                 flappy.setJumped(false);
-                /*if (event.x < 640) {
-                    // Stop moving left.
-                }
+                currentSprite = anim.getImage();
 
-                else if (event.x > 640) {
-                    // Stop moving right. }
-                }*/
             }
 
 
         }
+
+        if(flappy.getLives() == 0) {
+            hitGround = true;
+        }
+
+        if(bar1.getLives() == 0 || bar2.getLives() == 0) {
+            hitObstacle = true;
+        }
+
+        if(hitGround || hitObstacle)
+            livesLeft = 0;
 
         // 2. Check miscellaneous events like death:
 
@@ -117,11 +178,27 @@ public class GameScreen extends Screen {
             state = GameState.GameOver;
         }
 
-
         // 3. Call individual update() methods here.
         // This is where all the game updates happen.
         // For example, robot.update();
+
+
         flappy.update();
+
+        if (livesLeft == 0) {
+            currentSprite = Assets.character4;
+        }
+        else if(flappy.isShouldntFlap()) {
+            currentSprite = anim2.getImage();
+        }
+        else
+            currentSprite = anim.getImage();
+
+        scroller.update();
+        bar1.update2();
+        bar2.update2();
+        /*obst.update();*/
+        animate();
     }
 
     private void updatePaused(List<TouchEvent> touchEvents) {
@@ -129,7 +206,15 @@ public class GameScreen extends Screen {
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
             if (event.type == TouchEvent.TOUCH_UP) {
-                state = GameState.Running;
+                if (inBounds(event, 75, 350, 618, 91)) {
+                    state = GameState.Running;
+                }
+
+                if (inBounds(event, 75, 480, 618, 91)) {
+                    nullify();
+                    game.setScreen(new MainMenuScreen(game));
+                    return;
+                }
             }
         }
     }
@@ -138,9 +223,14 @@ public class GameScreen extends Screen {
         int len = touchEvents.size();
         for (int i = 0; i < len; i++) {
             TouchEvent event = touchEvents.get(i);
-            if (event.type == TouchEvent.TOUCH_UP) {
-                if (event.x > 300 && event.x < 980 && event.y > 100
-                        && event.y < 500) {
+            if (event.type == TouchEvent.TOUCH_DOWN) {
+                if (inBounds(event, 75, 350, 618, 91)) {
+                    nullify();
+                    game.setScreen(new GameScreen(game));
+                    return;
+                }
+
+                if (inBounds(event, 75, 480, 618, 91)) {
                     nullify();
                     game.setScreen(new MainMenuScreen(game));
                     return;
@@ -150,12 +240,28 @@ public class GameScreen extends Screen {
 
     }
 
+    private boolean inBounds(TouchEvent event, int x, int y, int width,
+                             int height) {
+        if (event.x > x && event.x < x + width - 1 && event.y > y
+                && event.y < y + height - 1)
+            return true;
+        else
+            return false;
+    }
+
     @Override
     public void paint(float deltaTime) {
         Graphics g = game.getGraphics();
 
         // First draw the game elements.
-
+        g.drawImage(bg, 0, 0);
+        /*g.drawImage(obstacle, obst.getCenterX() - 71, obst.getCenterY() - 157);
+        g.drawImage(bar, obst.getCenterX(), obst.getCenterY());*/
+        g.drawImage(ground, ground1.getX(), ground1.getY());
+        g.drawImage(ground, ground2.getX(), ground2.getY());
+        g.drawImage(bar, bar1.getX(), bar1.getY());
+        g.drawImage(bar, bar2.getX(), bar2.getY());
+        g.drawImage(currentSprite, flappy.getCenterX() - 108, flappy.getCenterY() - 56);
         // Example:
         // g.drawImage(Assets.background, 0, 0);
         // g.drawImage(Assets.character, characterX, characterY);
@@ -177,41 +283,68 @@ public class GameScreen extends Screen {
         // Set all variables to null. You will be recreating them in the
         // constructor.
         paint = null;
+        bg = null;
+        flappy = null;
+        currentSprite = null;
+        character = null;
+        character2 = null;
+        character3 = null;
+        character4 = null;
+        character5 = null;
+        anim = null;
+        anim2 = null;
+        obst = null;
+        obstacle = null;
+        livesLeft = 1;
+        bar1 = null;
+        bar2 = null;
+        ground1 = null;
+        ground2 = null;
+        bar = null;
+        ground = null;
 
         // Call garbage collector to clean up memory.
         System.gc();
     }
 
+    public void animate() {
+        anim.update(10);
+        anim2.update(10);
+    }
+
     private void drawReadyUI() {
         Graphics g = game.getGraphics();
-
-        g.drawImage(Assets.background, 0, 0);
-        g.drawImage(Assets.character, flappy.getCenterX()-108, flappy.getCenterY()-56);
         g.drawARGB(155, 0, 0, 0);
-        g.drawString("Tap screen to start.",
-                384, 300, paint);
+        /*g.drawString("Tap screen to start.",
+                384, 300, paint);*/
+        g.drawImage(Assets.tap, 86, 300);
 
     }
 
     private void drawRunningUI() {
         Graphics g = game.getGraphics();
-        g.drawImage(Assets.background, 0, 0);
-        g.drawImage(Assets.character, flappy.getCenterX()-108, flappy.getCenterY()-56);
     }
 
     private void drawPausedUI() {
         Graphics g = game.getGraphics();
         // Darken the entire screen so you can display the Paused screen.
-        g.drawImage(Assets.background, 0, 0);
         g.drawARGB(155, 0, 0, 0);
         g.drawImage(Assets.paused, 196, 200);
+        g.drawImage(Assets.resumebutton, 75, 350);
+        g.drawImage(Assets.menubutton, 75, 480);
+        /*g.drawString("Resume", 196, 300, paint2);
+        g.drawString("Menu", 196, 400, paint2);*/
     }
 
     private void drawGameOverUI() {
         Graphics g = game.getGraphics();
-        g.drawRect(0, 0, 1281, 801, Color.BLACK);
-        g.drawString("GAME OVER.", 640, 300, paint);
-
+        g.drawARGB(155, 0, 0, 0);
+        g.drawImage(Assets.gameover, 94, 200);
+        g.drawImage(Assets.tryagainbutton, 75, 350);
+        g.drawImage(Assets.menubutton, 75, 480);
+        /*g.drawString("GAME OVER.", 384, 300, paint);*/
+       /* g.drawString("try again", 384, 450, paint);
+        g.drawString("menu", 384, 600, paint);*/
     }
 
     @Override
@@ -235,4 +368,13 @@ public class GameScreen extends Screen {
     public void backButton() {
         pause();
     }
+
+    public static int getLivesLeft() {
+        return livesLeft;
+    }
+
+    public static Flappy getFlappy() {
+        return flappy;
+    }
+
 }

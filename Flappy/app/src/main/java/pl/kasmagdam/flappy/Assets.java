@@ -9,8 +9,9 @@ import pl.kasmagdam.framework.Sound;
  */
 public class Assets {
 
-    public static Image menu, splash, background, paused, character;
-    public static Image button;
+    public static Image menu, splash, background, paused, character, character2, character3,
+            character4, character5, obstacle, bar, gameover, tap, tryagainbutton, ground;
+    public static Image resumebutton, menubutton;
     public static Sound click;
     public static Music theme;
 

@@ -21,6 +21,18 @@ public class LoadingScreen extends Screen {
         Assets.background = g.newImage("background.png", Graphics.ImageFormat.RGB565);
         Assets.paused = g.newImage("paused.png", Graphics.ImageFormat.ARGB4444);
         Assets.character = g.newImage("character.png", Graphics.ImageFormat.ARGB4444);
+        Assets.character2 = g.newImage("character2.png", Graphics.ImageFormat.ARGB4444);
+        Assets.character3 = g.newImage("character3.png", Graphics.ImageFormat.ARGB4444);
+        Assets.character4 = g.newImage("character4.png", Graphics.ImageFormat.ARGB4444);
+        Assets.character5 = g.newImage("character5.png", Graphics.ImageFormat.ARGB4444);
+        Assets.obstacle = g.newImage("obstacle.png", Graphics.ImageFormat.ARGB4444);
+        Assets.bar = g.newImage("bar.png", Graphics.ImageFormat.ARGB4444);
+        Assets.tap = g.newImage("tap.png", Graphics.ImageFormat.ARGB4444);
+        Assets.gameover = g.newImage("gameover.png", Graphics.ImageFormat.ARGB4444);
+        Assets.resumebutton = g.newImage("resume_button.png", Graphics.ImageFormat.ARGB4444);
+        Assets.menubutton = g.newImage("menu_button.png", Graphics.ImageFormat.ARGB4444);
+        Assets.tryagainbutton = g.newImage("tryagain_button.png", Graphics.ImageFormat.ARGB4444);
+        Assets.ground = g.newImage("ground.png", Graphics.ImageFormat.RGB565);
         /*Assets.character = g.newImage("character.png", Graphics.ImageFormat.ARGB4444);*/
         /*Assets.button = g.newImage("button.png", Graphics.ImageFormat.ARGB4444);*/
 
